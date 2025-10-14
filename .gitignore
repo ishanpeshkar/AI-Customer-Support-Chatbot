@@ -1,0 +1,13 @@
+# Virtual Environment
+venv/
+__pycache__/
+node_modules/
+
+# Python
+*.pyc
+
+# Environment variables
+.env
+
+# Docker
+.DS_Store

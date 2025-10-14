@@ -1,0 +1,166 @@
+{
+  "faqs": [
+    {
+      "question": "return policy",
+      "keywords": [
+        "return",
+        "refund",
+        "money back",
+        "30-day"
+      ],
+      "answer": "InnovateTech offers a 30-day, no-questions-asked money-back guarantee on all products. To initiate a return, please visit the support section of our website and use your order number."
+    },
+    {
+      "question": "order tracking",
+      "keywords": [
+        "track",
+        "order",
+        "status",
+        "shipping",
+        "where is my stuff"
+      ],
+      "answer": "You can track your order at any time by visiting the 'Order Status' page on our website. You will need your order number and the email address used for the purchase."
+    },
+    {
+      "question": "business hours",
+      "keywords": [
+        "hours",
+        "support",
+        "open",
+        "close",
+        "available"
+      ],
+      "answer": "Our live customer support team is available from 9 AM to 6 PM, Monday through Friday, Eastern Time. Our AI assistant is available 24/7."
+    },
+    {
+      "question": "international shipping",
+      "keywords": [
+        "international",
+        "shipping",
+        "country",
+        "abroad"
+      ],
+      "answer": "Yes, InnovateTech ships to over 50 countries worldwide. Shipping costs and delivery times vary by destination. You can get an exact quote during the checkout process."
+    },
+    {
+      "question": "product warranty",
+      "keywords": [
+        "warranty",
+        "guarantee",
+        "limited warranty",
+        "repair",
+        "service",
+        "warranty period",
+        "warranty claim",
+        "manufacturer warranty",
+        "coverage",
+        "defect"
+      ],
+      "answer": "Most InnovateTech products include a 1-year limited warranty covering manufacturing defects. Extended warranty plans are available at checkout or from your account. To make a warranty claim, log into the support portal and provide your order number and a brief description; we may request photos or proof of purchase. Accidental damage is not covered unless an additional protection plan was purchased."
+    },
+    {
+      "question": "payment methods accepted",
+      "keywords": [
+        "payment",
+        "credit card",
+        "debit card",
+        "paypal",
+        "apple pay",
+        "google pay",
+        "bank transfer",
+        "invoice",
+        "buy now pay later",
+        "bnpl",
+        "visa",
+        "mastercard",
+        "amex"
+      ],
+      "answer": "We accept major credit and debit cards (Visa, Mastercard, American Express), PayPal, Apple Pay, and Google Pay. For large or corporate orders we also support bank transfers and invoicing. Select 'Buy Now, Pay Later' options may be offered at checkout via third-party providers where available."
+    },
+    {
+      "question": "account password reset",
+      "keywords": [
+        "password",
+        "reset",
+        "forgot password",
+        "account access",
+        "login help",
+        "unlock account",
+        "two-factor",
+        "2fa",
+        "reset link"
+      ],
+      "answer": "To reset your password, go to Sign In → 'Forgot password', enter the email on your account, and follow the reset link (valid for 24 hours). If you don't receive the email, check spam/junk folders or contact support with your account email. If you have two-factor authentication enabled and need help, our support team can assist after identity verification."
+    },
+    {
+      "question": "newsletter subscription",
+      "keywords": [
+        "subscribe",
+        "unsubscribe",
+        "newsletter",
+        "emails",
+        "marketing emails",
+        "email preferences",
+        "opt out",
+        "opt in",
+        "promotions",
+        "mailing list"
+      ],
+      "answer": "To subscribe, enter your email in the footer signup or enable marketing communications in Account → Email Preferences. To unsubscribe, click the 'unsubscribe' link at the bottom of any marketing email or update your preferences in your account. It can take up to 48 hours to fully process unsubscribes; transactional emails (order confirmations) will still be sent."
+    },
+    {
+      "question": "product compatibility",
+      "keywords": [
+        "compatibility",
+        "mac",
+        "windows",
+        "linux",
+        "macos",
+        "osx",
+        "operating system",
+        "system requirements",
+        "drivers",
+        "firmware",
+        "usb",
+        "bluetooth"
+      ],
+      "answer": "Most InnovateTech devices are compatible with macOS (10.14+) and Windows 10/11; specific models list system requirements on their product pages. Drivers and firmware updates are available from the Support → Downloads section. For peripheral compatibility (Bluetooth/USB), check the product specifications—contact support with your specific OS version if you encounter issues."
+    },
+    {
+      "question": "bulk discounts & corporate sales",
+      "keywords": [
+        "bulk",
+        "volume discount",
+        "corporate sales",
+        "enterprise",
+        "b2b",
+        "purchase order",
+        "invoice",
+        "trade",
+        "reseller",
+        "wholesale",
+        "large order",
+        "discount"
+      ],
+      "answer": "For bulk purchases, volume discounts and corporate pricing are available. Contact our Sales & Corporate team via the 'Business Sales' form or email with your company name, tax/VAT ID, desired quantities, and shipping address. We can provide quotes, purchase orders, invoicing, and extended payment terms for qualified businesses."
+    },
+    {
+      "question": "data privacy & security",
+      "keywords": [
+        "privacy",
+        "security",
+        "data protection",
+        "gdpr",
+        "ccpa",
+        "personal data",
+        "encryption",
+        "data retention",
+        "privacy policy",
+        "cookies",
+        "data deletion",
+        "security practices"
+      ],
+      "answer": "InnovateTech takes data privacy seriously. We collect only the information needed to process orders and improve service, store data securely with encryption in transit and at rest, and work with vetted third-party processors. We comply with applicable privacy laws (e.g., GDPR, CCPA). To review, request access to, or delete your data, visit our Privacy Center or contact privacy@innovate-tech.example with your request."
+    }
+  ]
+}

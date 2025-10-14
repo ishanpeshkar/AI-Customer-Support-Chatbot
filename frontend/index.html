@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>InnovateTech Support Bot 🤖</title>
+  <meta name="description" content="AI Customer Support chat UI - modern, deployable single-file frontend" />
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent1:#6d28d9;
+      --accent2:#06b6d4;
+      --muted:#94a3b8;
+      --bot-bg:#0b1220;
+      --bubble-bot:linear-gradient(180deg,#0f1724,#111827);
+      --bubble-user:linear-gradient(180deg,#7c3aed,#4f46e5);
+      --success:#10b981;
+      --error:#ef4444;
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background: radial-gradient(1000px 400px at 10% 10%, rgba(99,102,241,0.08), transparent),
+                  linear-gradient(180deg,#071029 0%, #041124 100%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Layout */
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+    .container{
+      width:100%;
+      max-width:1100px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .app{
+      height:86vh;
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    /* Hero heading (NEW) */
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:18px 20px;
+      border-radius:12px;
+      background: linear-gradient(90deg, rgba(109,40,217,0.12), rgba(6,182,212,0.06));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.45);
+    }
+    .hero-left{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .hero-badge{
+      background: linear-gradient(180deg,#7c3aed,#4f46e5);
+      color:white;
+      width:58px;
+      height:58px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      font-size:24px;
+      box-shadow: 0 8px 22px rgba(99,102,241,0.12);
+    }
+    .hero-title{
+      display:flex;
+      flex-direction:column;
+    }
+    .hero-title h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing: -0.2px;
+    }
+    .hero-sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .hero-cta{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03);
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Card */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    /* Header */
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 18px;
+      gap:12px;
+      background: linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:white;
+    }
+    .title{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      font-weight:600;
+      font-size:18px;
+    }
+    .title .logo{
+      width:42px;
+      height:42px;
+      border-radius:10px;
+      display:inline-grid;
+      place-items:center;
+      font-weight:700;
+      font-size:18px;
+      background: rgba(255,255,255,0.14);
+      box-shadow: 0 4px 14px rgba(99,102,241,0.12), inset 0 -6px 18px rgba(0,0,0,0.15);
+      backdrop-filter: blur(6px);
+    }
+    .header .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .session-badge{
+      font-size:12px;
+      color:rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.06);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+    .btn-ghost{
+      background:transparent;
+      border: none;
+      color:white;
+      padding:8px;
+      border-radius:10px;
+      cursor:pointer;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      transition:background 150ms;
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,0.06); }
+
+    /* Chat area */
+    .chat-area{ display:flex; flex-direction:column; height:100%; }
+    .messages{
+      padding:20px;
+      flex:1;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      scroll-behavior:smooth;
+      background-image: linear-gradient(transparent 0 60px, rgba(255,255,255,0.006) 60px 61px, transparent 61px);
+      background-size: 100% 60px;
+    }
+
+    .msg{
+      max-width:78%;
+      padding:12px 14px;
+      border-radius:14px;
+      line-height:1.35;
+      font-size:15px;
+      box-shadow: 0 4px 18px rgba(2,6,23,0.6);
+      word-break:break-word;
+      white-space:pre-wrap;
+    }
+    .bot{
+      align-self:flex-start;
+      background: var(--glass);
+      color:#dbeafe;
+      border: 1px solid rgba(255,255,255,0.03);
+      border-bottom-left-radius:6px;
+      position:relative;
+    }
+    .user{
+      align-self:flex-end;
+      background: var(--bubble-user);
+      color:white;
+      border-bottom-right-radius:6px;
+      position:relative;
+    }
+    /* avatars */
+    .avatar{
+      display:inline-grid;
+      grid-auto-flow:column;
+      gap:8px;
+      align-items:center;
+    }
+    .meta{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:6px;
+      opacity:.9;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .meta .who{ font-weight:600; color: #e6eef8; }
+
+    /* typing indicator */
+    .typing {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .dots{
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .dots span{
+      width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.6);
+      opacity:0.9; transform:translateY(0);
+      animation: bounce 900ms infinite;
+    }
+    .dots span:nth-child(2){ animation-delay:120ms; }
+    .dots span:nth-child(3){ animation-delay:240ms; }
+    @keyframes bounce{ 0%{ transform:translateY(0); opacity:.5 } 50%{ transform:translateY(-6px); opacity:1 } 100%{ transform:translateY(0); opacity:.5 } }
+
+    /* Input area */
+    .composer{
+      display:flex;
+      gap:10px;
+      padding:12px;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      align-items:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    }
+    textarea#message-input{
+      flex:1;
+      min-height:44px;
+      max-height:150px;
+      border-radius:12px;
+      padding:12px 14px;
+      resize:none;
+      font-size:15px;
+      color:#e6eef8;
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03);
+      outline:none;
+    }
+    textarea#message-input:focus{
+      box-shadow:0 6px 18px rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.7);
+    }
+    .send-btn{
+      height:44px;
+      width:44px;
+      border-radius:10px;
+      border:none;
+      display:inline-grid;
+      place-items:center;
+      cursor:pointer;
+      background: linear-gradient(180deg,#8b5cf6,#7c3aed);
+      box-shadow: 0 6px 18px rgba(99,102,241,0.18);
+      transition: transform 120ms ease;
+    }
+    .send-btn:active{ transform: translateY(2px) scale(.99) }
+    .send-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    /* Sidebar FAQ */
+    .faq{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:0;
+    }
+    .faq .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .faq .faq-toggle{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+      gap:10px;
+    }
+    .faq-list{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+    .faq-item{
+      padding:10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:14px;
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .faq-item:hover{ transform: translateY(-3px); box-shadow: 0 8px 28px rgba(2,6,23,0.6); }
+
+    /* small screens */
+    @media (max-width:980px){
+      .app{ grid-template-columns: 1fr; padding:12px; gap:14px; height: auto; max-height: 92vh; }
+      .faq{ order:2; }
+      .card{ height: auto; }
+      .chat-area{ min-height:56vh; max-height: 68vh; }
+      .messages{ max-height:58vh; overflow:auto; padding:14px; }
+    }
+
+    /* extra utilities */
+    .muted{ color:var(--muted); font-size:13px; }
+    .error-bubble{ border:1px solid rgba(239,68,68,0.2); background: linear-gradient(180deg, rgba(239,68,68,0.06), rgba(239,68,68,0.02)); color:#ffeef0; }
+    kbd{ font-family:monospace; font-size:12px; padding:3px 6px; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="container">
+      <!-- HERO / HEADING (ADDED) -->
+      <header class="hero" role="banner" aria-label="InnovateTech heading">
+        <div class="hero-left">
+          <div class="hero-badge" aria-hidden="true">🤖</div>
+          <div class="hero-title">
+            <h1>InnovateTech Support — Your 24/7 AI Customer Assistant</h1>
+            <div class="hero-sub">Fast answers • Order tracking • Returns • Escalation-ready</div>
+          </div>
+        </div>
+        <div class="hero-cta">
+          <div class="pill">Built for clarity ✨</div>
+          <div class="pill">Deploy-ready</div>
+        </div>
+      </header>
+
+      <div class="app" role="application" aria-label="InnovateTech Support chatbot UI">
+        <!-- Chat Card -->
+        <section class="card" aria-labelledby="chat-heading">
+          <div class="header">
+            <div class="title" id="chat-heading">
+              <div class="logo" aria-hidden="true">🤖</div>
+              <div>
+                InnovateTech Support <span style="font-weight:500; opacity:.95; font-size:13px; display:block;">AI Customer Support</span>
+              </div>
+            </div>
+
+            <div class="controls" role="toolbar" aria-label="Chat controls">
+              <div class="session-badge" id="session-indicator">Session: —</div>
+              <button class="btn-ghost" id="new-convo" title="New conversation (clear chat)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8 6v-.9A1.1 1.1 0 0 1 9.1 4h5.8A1.1 1.1 0 0 1 16 5.1V6M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> New</button>
+            </div>
+          </div>
+
+          <div class="chat-area">
+            <div id="messages" class="messages" aria-live="polite" aria-atomic="false"></div>
+
+            <!-- typing indicator hidden by default -->
+            <div id="typing-indicator" style="padding:10px 18px; display:none;">
+              <div class="typing">
+                <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="muted">Bot is typing...</div>
+              </div>
+            </div>
+
+            <form id="chat-form" class="composer" autocomplete="off" aria-label="Send message form">
+              <textarea id="message-input" name="message" placeholder="Type your message... (Enter to send, Shift+Enter for newline)" rows="1" aria-label="Message input"></textarea>
+              <button id="send-button" class="send-btn" title="Send message" aria-label="Send message" type="submit">
+                <!-- paper plane SVG -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 2L11 13" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22l-4-9-9-4 20-7z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- FAQ / Side Card -->
+        <aside class="faq">
+          <div class="panel">
+            <div class="faq-toggle" id="faq-toggle" role="button" aria-expanded="true" tabindex="0">
+              <div style="display:flex;flex-direction:column;">
+                <strong>Frequently Asked Questions</strong>
+                <span class="muted" style="margin-top:6px; font-size:13px;">Click a question to autofill the input ✨</span>
+              </div>
+              <div id="faq-chevron" style="transform:rotate(0deg); transition:transform 180ms;">❯</div>
+            </div>
+
+            <div id="faq-list" class="faq-list" style="margin-top:12px;">
+              <div class="faq-item" data-q="What is your return policy?">❓ What is your return policy?</div>
+              <div class="faq-item" data-q="How can I track my order?">❓ How can I track my order?</div>
+              <div class="faq-item" data-q="What are your business hours?">❓ What are your business hours?</div>
+            </div>
+          </div>
+
+          <div class="panel" style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>Tips & Shortcuts</strong>
+              <span class="muted" style="font-size:12px">⌨️</span>
+            </div>
+            <div style="font-size:13px; color:var(--muted);">
+              • Press <kbd>Enter</kbd> to send<br>
+              • Use <kbd>Shift+Enter</kbd> for a newline<br>
+              • Click "New" to start fresh 🧹
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*************************************************************************
+     * Single-file enhanced chatbot frontend
+     * - Connects to backend at http://127.0.0.1:8000
+     * - Handles session creation, message sending, clear chat
+     * - FAQ autofill, markdown-lite rendering, typing indicator
+     *************************************************************************/
+
+    const API_BASE = "http://127.0.0.1:8000";
+    const SESSION_KEY = "chat_session_id";
+
+    // DOM references
+    const messagesEl = document.getElementById("messages");
+    const typingIndicatorEl = document.getElementById("typing-indicator");
+    const chatForm = document.getElementById("chat-form");
+    const messageInput = document.getElementById("message-input");
+    const sendButton = document.getElementById("send-button");
+    const sessionIndicator = document.getElementById("session-indicator");
+    const newConvoBtn = document.getElementById("new-convo");
+    const faqToggle = document.getElementById("faq-toggle");
+    const faqList = document.getElementById("faq-list");
+    const faqChevron = document.getElementById("faq-chevron");
+
+    // state
+    let sessionId = localStorage.getItem(SESSION_KEY) || null;
+    let isWaiting = false;
+    let faqOpen = true;
+
+    // Init UI
+    updateSessionBadge();
+    showWelcomeIfNeeded();
+
+    // Event bindings
+    chatForm.addEventListener("submit", onSubmit);
+    messageInput.addEventListener("keydown", onKeyDown);
+    newConvoBtn.addEventListener("click", onNewConversation);
+    faqToggle.addEventListener("click", toggleFaq);
+    faqToggle.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFaq(); } });
+    faqList.addEventListener("click", (e) => {
+      const item = e.target.closest(".faq-item");
+      if (!item) return;
+      const q = item.dataset.q;
+      populateInputFromFaq(q);
+    });
+
+    // --- Helper: update session badge ---
+    function updateSessionBadge(){
+      sessionIndicator.textContent = sessionId ? `Session: ${sessionId}` : "Session: —";
+    }
+
+    // --- Welcome message ---
+    function showWelcomeIfNeeded(){
+      // If message area empty, show welcome text
+      if (messagesEl.children.length === 0){
+        addBotMessage("Hello! How can I help you today? 😊\nYou can ask about orders, returns, or our business hours.");
+      }
+    }
+
+    // --- New conversation handler ---
+    function onNewConversation(){
+      const confirmed = confirm("Start a new conversation? This will clear the chat and remove the current session.");
+      if (!confirmed) return;
+      clearChat();
+    }
+
+    function clearChat(){
+      // Remove all messages
+      messagesEl.innerHTML = "";
+      // Remove session
+      try { localStorage.removeItem(SESSION_KEY); } catch(e){}
+      sessionId = null;
+      updateSessionBadge();
+      // Add initial welcome back
+      showWelcomeIfNeeded();
+      // focus input
+      messageInput.value = "";
+      messageInput.focus();
+    }
+
+    // --- FAQ toggle ---
+    function toggleFaq(){
+      faqOpen = !faqOpen;
+      document.getElementById("faq-list").style.display = faqOpen ? "flex" : "none";
+      faqChevron.style.transform = faqOpen ? "rotate(0deg)" : "rotate(90deg)";
+    }
+
+    // --- Populate input from FAQ ---
+    function populateInputFromFaq(text){
+      messageInput.value = text;
+      messageInput.focus();
+      // place caret at end
+      messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
+      // optional: brief highlight
+      messageInput.animate([{background: 'rgba(255,255,255,0.02)'}, {background:'rgba(99,102,241,0.06)'}, {background:'rgba(255,255,255,0.02)'}], {duration:700});
+    }
+
+    // --- Enter key handling: Enter to send, Shift+Enter newline ---
+    function onKeyDown(e){
+      if (e.key === "Enter" && !e.shiftKey){
+        e.preventDefault();
+        chatForm.requestSubmit();
+      }
+    }
+
+    // --- Form submit ---
+    async function onSubmit(e){
+      e.preventDefault();
+      const raw = messageInput.value.trim();
+      if (!raw || isWaiting) return;
+
+      addUserMessage(raw);
+      messageInput.value = "";
+      // show typing indicator while waiting
+      showTyping(true);
+
+      try {
+        let sid = sessionId;
+        // create session if needed
+        if (!sid){
+          const created = await createSession();
+          sid = created;
+          sessionId = sid;
+          try { localStorage.setItem(SESSION_KEY, sid); } catch(e){}
+          updateSessionBadge();
+        }
+
+        // send message
+        const botResp = await postMessage(sid, raw);
+        if (botResp && typeof botResp.content === "string"){
+          addBotMessage(botResp.content);
+        } else {
+          throw new Error("Invalid bot response");
+        }
+
+      } catch (err){
+        console.error("Chat send error:", err);
+        addBotMessage("Sorry, I seem to be having trouble connecting. Please try again.", { error:true });
+      } finally {
+        showTyping(false);
+      }
+    }
+
+    // --- Create session ---
+    async function createSession(){
+      const res = await fetch(`${API_BASE}/api/sessions/`, { method:"POST" });
+      if (!res.ok) throw new Error("Failed to create session");
+      const data = await res.json();
+      if (!data || data.id == null) throw new Error("Session payload invalid");
+      return String(data.id);
+    }
+
+    // --- Post message to backend ---
+    async function postMessage(sid, content){
+      const res = await fetch(`${API_BASE}/api/sessions/${sid}/messages/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content })
+      });
+      if (!res.ok){
+        const text = await res.text().catch(()=>res.statusText);
+        throw new Error(`API error ${res.status}: ${text}`);
+      }
+      const data = await res.json();
+      return data;
+    }
+
+    // --- UI: add user message (textContent only) ---
+    function addUserMessage(text){
+      const wrapper = document.createElement("div");
+      wrapper.className = "msg user";
+      wrapper.setAttribute("role","article");
+      wrapper.innerHTML = `<div class="meta"><span class="who">You</span> <span class="muted">· just now</span></div>`;
+      const body = document.createElement("div");
+      body.style.whiteSpace = "pre-wrap";
+      body.textContent = text;
+      wrapper.appendChild(body);
+      messagesEl.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    // --- UI: add bot message (supports markdown-lite) ---
+    function addBotMessage(text, opts = {}){
+      const wrapper = document.createElement("div");
+      wrapper.className = "msg bot" + (opts.error ? " error-bubble" : "");
+      wrapper.setAttribute("role","article");
+      wrapper.innerHTML = `<div class="meta"><span class="who">InnovateTech Bot</span> <span class="muted">· just now</span></div>`;
+      const body = document.createElement("div");
+      body.style.whiteSpace = "pre-wrap";
+      body.innerHTML = markdownToHTML(escapeHtml(text));
+      wrapper.appendChild(body);
+      messagesEl.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    // --- Typing indicator toggle ---
+    function showTyping(show){
+      isWaiting = show;
+      typingIndicatorEl.style.display = show ? "block" : "none";
+      scrollToBottom();
+    }
+
+    // --- Scrolling ---
+    function scrollToBottom(){
+      // small timeout to allow layout
+      setTimeout(()=> {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }, 40);
+    }
+
+    // --- Utilities: escapeHtml and a tiny markdown-like converter ---
+    function escapeHtml(unsafe){
+      if (!unsafe && unsafe !== "") return "";
+      return unsafe.replace(/&/g, "&amp;")
+                   .replace(/</g, "&lt;")
+                   .replace(/>/g, "&gt;")
+                   .replace(/\"/g, "&quot;")
+                   .replace(/'/g, "&#039;");
+    }
+
+    function markdownToHTML(mdEscaped){
+      // mdEscaped is already escaped for HTML; we will convert a few tokens to HTML.
+      // - Convert **bold** to <strong>
+      // - Convert *italic* to <em>
+      // - Convert lines starting with "- " to <ul><li>... (simple)
+      // - Convert URLs into clickable links
+      // - Convert newlines to <br>
+      let s = mdEscaped;
+
+      // links: simple regex for http/https
+      s = s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+
+      // bold **text**
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+      // italic *text*
+      s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Lists: convert lines starting with "- " into UL
+      // Split into lines and rebuild
+      const lines = s.split(/\r?\n/);
+      let out = [];
+      let inList = false;
+      for (let line of lines){
+        if (/^\s*-\s+/.test(line)){
+          if (!inList){ out.push("<ul>"); inList = true; }
+          out.push("<li>" + line.replace(/^\s*-\s+/, "") + "</li>");
+        } else {
+          if (inList){ out.push("</ul>"); inList = false; }
+          out.push(line);
+        }
+      }
+      if (inList) out.push("</ul>");
+      s = out.join("<br>");
+
+      return s;
+    }
+
+    // --- Initial focus ---
+    messageInput.focus();
+
+ 
+    if (sessionId){
+      // show session connected faint toast message as a bot message
+      addBotMessage("Session restored. Your previous conversation will continue in this session. 🎯");
+    }
+
+
+    if (window.innerWidth <= 980) {
+      // collapsed on small screens
+      toggleFaq();
+    }
+
+    // handle connection health check (optional)
+    (async function initialPing(){
+      try{
+        // quick HEAD or OPTIONS to warm connection (harmless if server ignores)
+        await fetch(`${API_BASE}/api/sessions/`, { method:"OPTIONS" }).catch(()=>null);
+      } catch(e){}
+    })();
+  </script>
+</body>
+</html>
