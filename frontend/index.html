@@ -444,7 +444,7 @@
     const API_BASE = "http://127.0.0.1:8000";
     const SESSION_KEY = "chat_session_id";
 
-    // DOM references
+    
     const messagesEl = document.getElementById("messages");
     const typingIndicatorEl = document.getElementById("typing-indicator");
     const chatForm = document.getElementById("chat-form");
@@ -456,16 +456,16 @@
     const faqList = document.getElementById("faq-list");
     const faqChevron = document.getElementById("faq-chevron");
 
-    // state
+ 
     let sessionId = localStorage.getItem(SESSION_KEY) || null;
     let isWaiting = false;
     let faqOpen = true;
 
-    // Init UI
+    
     updateSessionBadge();
     showWelcomeIfNeeded();
 
-    // Event bindings
+   
     chatForm.addEventListener("submit", onSubmit);
     messageInput.addEventListener("keydown", onKeyDown);
     newConvoBtn.addEventListener("click", onNewConversation);
@@ -478,20 +478,20 @@
       populateInputFromFaq(q);
     });
 
-    // --- Helper: update session badge ---
+   
     function updateSessionBadge(){
       sessionIndicator.textContent = sessionId ? `Session: ${sessionId}` : "Session: —";
     }
 
-    // --- Welcome message ---
+    
     function showWelcomeIfNeeded(){
-      // If message area empty, show welcome text
+     
       if (messagesEl.children.length === 0){
         addBotMessage("Hello! How can I help you today? 😊\nYou can ask about orders, returns, or our business hours.");
       }
     }
 
-    // --- New conversation handler ---
+    
     function onNewConversation(){
       const confirmed = confirm("Start a new conversation? This will clear the chat and remove the current session.");
       if (!confirmed) return;
@@ -499,37 +499,37 @@
     }
 
     function clearChat(){
-      // Remove all messages
+  
       messagesEl.innerHTML = "";
-      // Remove session
+   
       try { localStorage.removeItem(SESSION_KEY); } catch(e){}
       sessionId = null;
       updateSessionBadge();
-      // Add initial welcome back
+
       showWelcomeIfNeeded();
-      // focus input
+     
       messageInput.value = "";
       messageInput.focus();
     }
 
-    // --- FAQ toggle ---
+    
     function toggleFaq(){
       faqOpen = !faqOpen;
       document.getElementById("faq-list").style.display = faqOpen ? "flex" : "none";
       faqChevron.style.transform = faqOpen ? "rotate(0deg)" : "rotate(90deg)";
     }
 
-    // --- Populate input from FAQ ---
+
     function populateInputFromFaq(text){
       messageInput.value = text;
       messageInput.focus();
-      // place caret at end
+      
       messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
-      // optional: brief highlight
+     
       messageInput.animate([{background: 'rgba(255,255,255,0.02)'}, {background:'rgba(99,102,241,0.06)'}, {background:'rgba(255,255,255,0.02)'}], {duration:700});
     }
 
-    // --- Enter key handling: Enter to send, Shift+Enter newline ---
+    
     function onKeyDown(e){
       if (e.key === "Enter" && !e.shiftKey){
         e.preventDefault();
@@ -537,7 +537,7 @@
       }
     }
 
-    // --- Form submit ---
+    
     async function onSubmit(e){
       e.preventDefault();
       const raw = messageInput.value.trim();
@@ -545,12 +545,12 @@
 
       addUserMessage(raw);
       messageInput.value = "";
-      // show typing indicator while waiting
+      
       showTyping(true);
 
       try {
         let sid = sessionId;
-        // create session if needed
+      
         if (!sid){
           const created = await createSession();
           sid = created;
@@ -559,7 +559,7 @@
           updateSessionBadge();
         }
 
-        // send message
+     
         const botResp = await postMessage(sid, raw);
         if (botResp && typeof botResp.content === "string"){
           addBotMessage(botResp.content);
@@ -575,7 +575,6 @@
       }
     }
 
-    // --- Create session ---
     async function createSession(){
       const res = await fetch(`${API_BASE}/api/sessions/`, { method:"POST" });
       if (!res.ok) throw new Error("Failed to create session");
@@ -584,7 +583,7 @@
       return String(data.id);
     }
 
-    // --- Post message to backend ---
+   
     async function postMessage(sid, content){
       const res = await fetch(`${API_BASE}/api/sessions/${sid}/messages/`, {
         method: "POST",
@@ -599,7 +598,6 @@
       return data;
     }
 
-    // --- UI: add user message (textContent only) ---
     function addUserMessage(text){
       const wrapper = document.createElement("div");
       wrapper.className = "msg user";
@@ -613,7 +611,6 @@
       scrollToBottom();
     }
 
-    // --- UI: add bot message (supports markdown-lite) ---
     function addBotMessage(text, opts = {}){
       const wrapper = document.createElement("div");
       wrapper.className = "msg bot" + (opts.error ? " error-bubble" : "");
@@ -627,22 +624,20 @@
       scrollToBottom();
     }
 
-    // --- Typing indicator toggle ---
     function showTyping(show){
       isWaiting = show;
       typingIndicatorEl.style.display = show ? "block" : "none";
       scrollToBottom();
     }
 
-    // --- Scrolling ---
+
     function scrollToBottom(){
-      // small timeout to allow layout
+
       setTimeout(()=> {
         messagesEl.scrollTop = messagesEl.scrollHeight;
       }, 40);
     }
 
-    // --- Utilities: escapeHtml and a tiny markdown-like converter ---
     function escapeHtml(unsafe){
       if (!unsafe && unsafe !== "") return "";
       return unsafe.replace(/&/g, "&amp;")
@@ -653,25 +648,19 @@
     }
 
     function markdownToHTML(mdEscaped){
-      // mdEscaped is already escaped for HTML; we will convert a few tokens to HTML.
-      // - Convert **bold** to <strong>
-      // - Convert *italic* to <em>
-      // - Convert lines starting with "- " to <ul><li>... (simple)
-      // - Convert URLs into clickable links
-      // - Convert newlines to <br>
+      
       let s = mdEscaped;
 
-      // links: simple regex for http/https
+
       s = s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
 
-      // bold **text**
+      
       s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
-      // italic *text*
+
       s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
-      // Lists: convert lines starting with "- " into UL
-      // Split into lines and rebuild
+      
       const lines = s.split(/\r?\n/);
       let out = [];
       let inList = false;
@@ -690,25 +679,24 @@
       return s;
     }
 
-    // --- Initial focus ---
     messageInput.focus();
 
  
     if (sessionId){
-      // show session connected faint toast message as a bot message
+      
       addBotMessage("Session restored. Your previous conversation will continue in this session. 🎯");
     }
 
 
     if (window.innerWidth <= 980) {
-      // collapsed on small screens
+   
       toggleFaq();
     }
 
-    // handle connection health check (optional)
+   
     (async function initialPing(){
       try{
-        // quick HEAD or OPTIONS to warm connection (harmless if server ignores)
+        
         await fetch(`${API_BASE}/api/sessions/`, { method:"OPTIONS" }).catch(()=>null);
       } catch(e){}
     })();

@@ -1,4 +1,4 @@
-# src/main.py
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware # <-- IMPORT THIS
 from src.db.database import create_db_and_tables
@@ -10,15 +10,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# --- ADD THIS MIDDLEWARE CONFIGURATION ---
-# This allows your frontend (running on any domain) to communicate with your backend.
-# For production, you would restrict origins to your actual frontend's domain.
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"], 
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],  
+    allow_headers=["*"],  
 )
 # -----------------------------------------
 

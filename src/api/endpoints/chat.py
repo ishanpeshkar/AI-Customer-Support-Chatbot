@@ -1,4 +1,4 @@
-# src/api/endpoints/chat.py
+
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session as SQLModelSession, select, SQLModel

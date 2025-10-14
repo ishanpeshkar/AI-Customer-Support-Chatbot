@@ -1,11 +1,11 @@
-# check_models.py
+
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
 # --- Setup ---
 print("Attempting to load .env file from the current directory...")
-# This assumes you run this script from the project root.
+
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 
@@ -17,14 +17,14 @@ else:
     print("API Key found. Configuring the client...")
     genai.configure(api_key=api_key)
 
-    # --- The Diagnostic Part ---
+    
     print("\nFetching a list of models you have access to...")
     print("--------------------------------------------------")
     
     found_models = False
     try:
         for m in genai.list_models():
-            # We only care about models that can actually generate content for a chat
+            
             if 'generateContent' in m.supported_generation_methods:
                 print(f"✅ Found usable model: {m.name}")
                 found_models = True

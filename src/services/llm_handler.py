@@ -1,4 +1,4 @@
-# src/services/llm_handler.py
+
 import google.generativeai as genai
 from typing import List, Dict, Any
 import json
@@ -95,7 +95,7 @@ def generate_bot_response(history: List[Message]) -> str:
     
 
 
-# Add this function to the end of src/services/llm_handler.py
+
 
 def summarize_conversation(history: List[Message]) -> str:
     """
@@ -104,7 +104,7 @@ def summarize_conversation(history: List[Message]) -> str:
     if not model:
         return "Error: LLM model is not configured."
 
-    # Create a simple, clean transcript of the conversation
+    
     transcript = "\n".join(f"{msg.sender.capitalize()}: {msg.content}" for msg in history)
 
     summary_prompt = f"""
