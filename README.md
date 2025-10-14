@@ -24,6 +24,12 @@ This README contains an easy Quick Start, API examples, prompt guidance, deploym
 
 ---
 
+### 🎥 Live Demo
+
+**[Watch the 3-Minute Video Demo Here]**(https://drive.google.com/file/d/10QHK-pePmT1Kgj5eMa1K2gekwcXTnrwb/view?usp=sharing)
+
+---
+
 ## 📚 Table of contents
 
 * [Quick Start](#-quick-start)
