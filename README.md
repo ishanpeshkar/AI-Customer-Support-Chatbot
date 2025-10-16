@@ -23,6 +23,17 @@ InnovateTech is a full-stack AI customer support bot designed as a professional 
 This README contains an easy Quick Start, API examples, prompt guidance, deployment notes, and recommended next steps for production hardening.
 
 ---
+## 🛠️ Tech Stack
+
+| Category      | Technology & Libraries                        | Purpose                                           |
+|---------------|-----------------------------------------------|---------------------------------------------------|
+| **Backend**     | Python, FastAPI, Uvicorn                      | For creating a high-performance, modern REST API. |
+| **Database**    | PostgreSQL                                    | Robust, relational data storage for sessions.     |
+| **ORM**         | SQLModel                                      | Type-safe, modern data interaction with the DB.   |
+| **LLM Service** | Google Gemini API                             | Powering the bot's conversational intelligence.   |
+| **DevOps**      | Docker, Docker Compose                        | For containerizing the database and ensuring a reproducible environment. |
+| **Frontend**    | Vanilla HTML, CSS, JavaScript (Single File)   | To create a lightweight, universally compatible, and stunning user interface. |
+---
 
 ### 🎥 Live Demo
 
@@ -57,14 +68,14 @@ This README contains an easy Quick Start, API examples, prompt guidance, deploym
 * A Google AI / Gemini API Key (or other LLM provider key if you adapt the handler)
 * Git (optional but recommended)
 
-### Clone & configure
+### 1. Clone & configure
 
 ```bash
 git clone https://github.com/[YOUR-USERNAME]/ai-customer-support-bot.git
 cd ai-customer-support-bot
 ```
 
-Create a `.env` from the example and add your keys:
+### 2. Create a `.env` from the example and add your keys:
 
 ```bash
 cp .env.example .env
@@ -74,7 +85,7 @@ cp .env.example .env
 
 > 🔐 **Security note:** Do not commit `.env`. Use a secrets manager for production.
 
-### Run with Docker Compose
+### 3. Run with Docker Compose
 
 Build and run backend + DB with a single command:
 
@@ -82,22 +93,58 @@ Build and run backend + DB with a single command:
 docker-compose up --build
 ```
 
-* Backend: `http://127.0.0.1:8000`
-* API docs (interactive): `http://127.0.0.1:8000/docs`
+### 4. Run the Backend Server
 
-### Launch the frontend
-
-Open the single-file frontend at `frontend/index.html` directly, or serve it with a static server (recommended):
+Set up a Python virtual environment and run the FastAPI server.
 
 ```bash
-cd frontend
-npx serve -p 5173    # or: python -m http.server 5173
-# open http://localhost:5173
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn src.main:app --reload
 ```
 
-Make sure `API_BASE` in the frontend points to your backend host (default: `http://127.0.0.1:8000`).
+* Backend: The API will now be running at - `http://127.0.0.1:8000`
+* API docs (interactive): `http://127.0.0.1:8000/docs`
+
+### 5. Launch the frontend
+
+Navigate to the frontend/ directory and open the index.html file directly in your web browser. 
+.
+Ensure the API_BASE variable in the file points to your backend host (http://127.0.0.1:8000 by default).
+
 
 ---
+## 🏗️ Architecture Diagram
+
+The system uses a clean, decoupled architecture for scalability and maintainability.
+
+```mermaid
+graph TD
+    A[🌐 Frontend: Floating Chat Widget] <--> B[🚀 FastAPI Backend API];
+    B <--> C[🧠 Google Gemini API <br> (for Generation & Summarization)];
+    B <--> D[📦 PostgreSQL Database <br> (in Docker Container)];
+    B -- RAG --> E[📚 knowledge_base.json];
+
+    subgraph "User's Browser (Client)"
+        A
+    end
+
+    subgraph "Local Server (Host)"
+        B
+        D
+        E
+    end
+
+    subgraph "Third-Party Cloud Service"
+        C
+    end
+
+  ```
+---
+
+
+
 
 ## 🔎 How it works (high level)
 
@@ -121,7 +168,7 @@ Make sure `API_BASE` in the frontend points to your backend host (default: `http
 
 > All endpoints live under `/api` by default. Replace host/port if needed.
 
-### Create a session
+### 1. Create a session
 
 ```http
 POST /api/sessions/
@@ -131,7 +178,7 @@ Content-Type: application/json
 { "id": 1 }
 ```
 
-### Post a message (gets bot response)
+### 2. Post a message (gets bot response)
 
 ```http
 POST /api/sessions/1/messages/
@@ -147,7 +194,7 @@ Content-Type: application/json
 }
 ```
 
-### Summarize a session
+### 3. Summarize a session
 
 ```http
 POST /api/sessions/1/summarize
@@ -269,10 +316,8 @@ PORT=8000
 
 ## 🙋‍♂️ Credits & Contact
 
-* **Author:** `Your Name` — `you@example.com`
-* **Repo:** `https://github.com/[YOUR-USERNAME]/ai-customer-support-bot`
+* **Author:** `Ishan Peshkar` — `ishanpeshkar@gmail.com`
+* **Repo:** `https://github.com/ishanpeshkar/Ai-Customer-Support-Chatbot`
 * **License:** MIT
 
 ---
-
-> Want help customizing this README (badges, video link, or repo URL inserted)? Tell me what to add and I’ll update the file.
