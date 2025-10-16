@@ -115,32 +115,31 @@ Ensure the API_BASE variable in the file points to your backend host (http://127
 
 
 ---
-## 🏗️ Architecture Diagram
+### 🏗️ Architecture Diagram
 
 The system uses a clean, decoupled architecture for scalability and maintainability.
 
 ```mermaid
 graph TD
-    A[🌐 Frontend: Floating Chat Widget] <--> B[🚀 FastAPI Backend API];
-    B <--> C[🧠 Google Gemini API <br> (for Generation & Summarization)];
-    B <--> D[📦 PostgreSQL Database <br> (in Docker Container)];
-    B -- RAG --> E[📚 knowledge_base.json];
+  A["🌐 Frontend: Floating Chat Widget"] <--> B["🚀 FastAPI Backend API"]
+  B <--> C["🧠 Google Gemini API\n(for Generation & Summarization)"]
+  B <--> D["📦 PostgreSQL Database\n(in Docker Container)"]
+  B -- RAG --> E["📚 knowledge_base.json"]
 
-    subgraph "User's Browser (Client)"
-        A
-    end
+  subgraph "User's Browser (Client)"
+    A
+  end
 
-    subgraph "Local Server (Host)"
-        B
-        D
-        E
-    end
+  subgraph "Local Server (Host)"
+    B
+    D
+    E
+  end
 
-    subgraph "Third-Party Cloud Service"
-        C
-    end
-
-  ```
+  subgraph "Third-Party Cloud Service"
+    C
+  end
+```
 ---
 
 
